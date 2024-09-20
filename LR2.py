@@ -45,14 +45,8 @@ df['target_interpolated_manual'] = linear_interpolation(df['target'])
 df['target_interpolated'] = df['target'].interpolate(method='linear')
 
 # Простое экспоненциальное сглаживание
-def exponential_smoothing(series, alpha):
-    smoothed = [series[0]]  # Начальное значение
-    for i in range(1, len(series)):
-        smoothed.append(alpha * series[i] + (1 - alpha) * smoothed[i - 1])
-    return smoothed
-
 alpha = 0.5  # Коэффициент сглаживания
-df['reference_smoothed'] = exponential_smoothing(df['reference'], alpha)
+df['reference_smoothed'] = df['target'].ewm(alpha=alpha).mean()
 
 plt.figure(figsize=(14, 10))
 
